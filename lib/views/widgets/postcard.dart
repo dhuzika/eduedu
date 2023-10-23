@@ -46,14 +46,15 @@ class _PostCardState extends State<PostCard> {
         final height = constraints.maxHeight;
 
         return ClipRRect(
-          borderRadius:
-              BorderRadius.circular(64.0), // Define o raio do arredondamento
+              // Define o raio do arredondamento
           child: Container(
+            width: 600,
+            height: 700,
             decoration: BoxDecoration(
               color: Colors.black,
             ),
             padding: const EdgeInsets.symmetric(
-              vertical: 10,
+              vertical: 1,
             ),
             child: Column(
               children: [
@@ -102,23 +103,23 @@ class _PostCardState extends State<PostCard> {
                 ),
                 // STACK PARA SOBREPOR TEXTO NA IMAGEM
                 Stack(
-                  alignment: Alignment.topLeft,
+                  alignment: Alignment.topCenter,
                   children: [
-                    Opacity(
-                      opacity: 1,
+                    Container(
                       child: Image.network(
                         widget.snap['imageFileUrl'].toString(),
-                        fit: BoxFit.cover,
-                        height: MediaQuery.of(context).size.height * 0.7,
-                        width: double.infinity,
+                        fit: BoxFit.contain,
+                        height: 600,
+                        width: width,
                       ),
+                      
                     ),
                     Container(
                       padding: const EdgeInsets.all(16),
-                      width: double.infinity,
+                      width: width,
                       color: Colors.black.withOpacity(0.5),
                       child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
@@ -127,31 +128,33 @@ class _PostCardState extends State<PostCard> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                                 fontSize: 20,
+                                
                               ),
                             ),
                           ]),
                     ),
                     Positioned(
-                      bottom: 300,
+                      bottom: MediaQuery.of(context).size.height*0.35,
                       left: 50,
-                      right: 0,
+                      right: 50,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
+                            width: width*0.4,
                             padding: const EdgeInsets.all(
-                                8), // Adicionando preenchimento ao contêiner do texto
+                                8), 
                             decoration: BoxDecoration(
                               color: Colors.black.withOpacity(
-                                  0.8), // Definindo a cor de fundo com opacidade para o contêiner do texto
+                                  0.4),
                               borderRadius: BorderRadius.circular(
-                                  8), // Adicionando bordas arredondadas
+                                  8),
                             ),
                             child: Text(
                               widget.snap['descricao'],
                               style: const TextStyle(
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.normal,
                                 color: Colors.white,
                               ),
                             ),
@@ -161,14 +164,14 @@ class _PostCardState extends State<PostCard> {
                     ),
                     Positioned(
                       bottom: 0,
-                      left: 670,
+                      left: width * 0.45,
                       right: 0,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {print('$width e $height');},
                             color: Colors.white,
                             iconSize: 40,
                             icon: Icon(Icons.message_outlined),

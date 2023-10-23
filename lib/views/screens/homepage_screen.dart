@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projeto/responsve/responsive_layout.dart';
 // import 'package:projeto/views/screens/criar_projeto_screen.dart';
 import 'package:projeto/views/widgets/postcard.dart';
 import 'package:projeto/header.dart';
@@ -46,7 +47,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
+    return ResponsiveLayout(child:Scaffold(
       backgroundColor: Colors.black,
       appBar: AppHeader(),
       body: StreamBuilder(
@@ -61,10 +62,7 @@ class _HomePageState extends State<HomePage> {
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (ctx, index) => Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: width * 0.3,
-                vertical: 30,
-              ),
+              
               child: PostCard(
                 snap: snapshot.data!.docs[index].data(),
               ),
@@ -87,7 +85,7 @@ class _HomePageState extends State<HomePage> {
       //   },
       //   child: Icon(Icons.add),
       // ),
-    );
+    ));
   }
 }
 
