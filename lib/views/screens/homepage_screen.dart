@@ -1,135 +1,100 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-// import 'add_image.dart';
-import 'criar_projeto_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:projeto/views/screens/criar_projeto_screen.dart';
+import 'package:projeto/views/widgets/postcard.dart';
 import 'package:projeto/header.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:projeto/firebase%20resources/project_auth.dart';
-import 'package:projeto/firebase%20resources/user_auth.dart';
-import 'package:projeto/utils/constants.dart';
-import 'package:projeto/views/screens/criar_projeto_screen.dart';
-import 'package:projeto/views/screens/recuperar_senha_screen.dart';
-import 'package:projeto/views/widgets/button.dart';
-import 'package:projeto/views/widgets/text_input_field.dart';
+class HomePage extends StatefulWidget {
+  // const HomePage({Key? key}) : super(key: key)
 
-void main() {
-  runApp(App());
+  @override
+  State<HomePage> createState() => _HomePageState();
 }
 
-class App extends StatelessWidget {
+class _HomePageState extends State<HomePage> {
+  // List<ImageData> _imageDataList = [];
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: AppState(),
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.black,
-      ),
-    );
+  void initState() {
+    super.initState();
+    // _fetchImageDataFromFirebase();
   }
-}
 
-class AppState extends StatefulWidget {
-  late final ProjectAuth projAuth;
+  // Future<void> _fetchImageDataFromFirebase() async {
+  //   try {
+  //     final QuerySnapshot snapshot =
+  //         await FirebaseFirestore.instance.collection('projects').get();
 
-  @override
-  _AppState createState() => _AppState();
-}
+  //     final List<ImageData> imageDataList = snapshot.docs.map((doc) {
+  //       final data = doc.data() as Map<String, dynamic>;
+  //       return ImageData(
+  //         data['imageFileUrl'] ?? '',
+  //         data['titulo'] ?? '',
+  //         data['descricao'] ?? '',
+  //       );
+  //     }).toList();
 
-class _AppState extends State<AppState> {
-  List<ImageData> _imageDataList = [];
+  //     setState(() {
+  //       _imageDataList = imageDataList;
+  //     });
+  //   } catch (e) {
+  //     print('Error fetching data: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppHeader(),
-      body: ListView.builder(
-        itemCount: _imageDataList.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Stack(
-              children: [
-                Image.file(_imageDataList[index].imageFile),
-                Positioned(
-                  top: 20,
-                  left: 20,
-                  child: Text(
-                    _imageDataList[index].title,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 60,
-                  left: 20,
-                  right: 20,
-                  bottom: 20,
-                  child: Text(
-                    _imageDataList[index].description,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 270,
-                  right: 0,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        color: Colors.white,
-                        iconSize: 40,
-                        icon: Icon(Icons.message_outlined),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        color: Colors.white,
-                        iconSize: 40,
-                        icon: Icon(Icons.content_paste_outlined),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('projects').snapshots(),
+        builder: (context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (ctx, index) => Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: width * 0.3,
+                vertical: 30,
+              ),
+              child: PostCard(
+                snap: snapshot.data!.docs[index].data(),
+              ),
             ),
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(
-            MaterialPageRoute(
-              builder: (context) => CriarProjetoPage(),
-            ),
-          )
-              .then((newImageData) {
-            if (newImageData != null) {
-              setState(() {
-                _imageDataList.add(newImageData);
-              });
-            }
-          });
-        },
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     for (int i = 0; i < _imageDataList.length; i++) {
+      //       print(_imageDataList[i].imageUrl);
+      //       print(_imageDataList[i].title);
+      //       print(_imageDataList[i].description);
+      //     }
+      //     Navigator.of(context).push(
+      //       MaterialPageRoute(
+      //         builder: (context) => CriarProjetoPage(),
+      //       ),
+      //     );
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
     );
   }
 }
 
-class ImageData {
-  final File imageFile;
-  final String title;
-  final String description;
+// class ImageData {
+//   final String imageUrl; // URL of the image
+//   final String title;
+//   final String description;
 
-  ImageData(this.imageFile, this.title, this.description);
-}
+//   ImageData(this.imageUrl, this.title, this.description);
+// }

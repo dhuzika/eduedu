@@ -6,6 +6,7 @@ import 'package:projeto/firebase%20resources/project_auth.dart';
 import 'package:projeto/firebase%20resources/user_auth.dart';
 import 'package:projeto/firebase_options.dart';
 import 'package:projeto/views/screens/criar_projeto_screen.dart';
+import 'package:projeto/views/screens/homepage_screen.dart';
 
 void main() async {
   await Firebase.initializeApp(
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // ignore: prefer_const_constructors
-      home: LoginOrRegister(),
+      home: HomePage(),
     );
   }
 }

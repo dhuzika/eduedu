@@ -227,7 +227,7 @@ class _CriarProjetoScreenState extends State<CriarProjetoPage> {
                 //     userUidString,
                 //     userEmail!);
                 Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => App()));
+                    .push(MaterialPageRoute(builder: (context) => HomePage()));
               },
               text: "Criar Projeto",
             ),
